@@ -3,61 +3,102 @@
 
 #include "Player/DPlayerPawn.h"
 
-#include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
-// Sets default values
 ADPlayerPawn::ADPlayerPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bAddDefaultMovementBindings = false;
+
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
-	RootComponent = SpringArmComp;
+	SpringArmComp->SetupAttachment(RootComponent);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
-
-	CameraMovementComp = CreateDefaultSubobject<UDCameraMovementComponent>("CameraMovementComp");
 }
 
-// Called when the game starts or when spawned
 void ADPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-void ADPlayerPawn::DrawCameraPositionDebug() const
+void ADPlayerPawn::MouseMovement()
 {
-	if (bDebugCamera)
+	float MouseX;
+	float MouseY;
+
+	int ViewportSizeX;
+	int ViewportSizeY;
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (PlayerController)
 	{
-		FHitResult Hit;
+		bool bMouseLocationFound = PlayerController->GetMousePosition(MouseX, MouseY);
+		PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
 
-		const FVector StartLocation = CameraComp->GetComponentLocation();
-		const FVector EndLocation = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * 10000);
-
-		const bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_WorldDynamic);
-		if (bHit)
+		if (bMouseLocationFound)
 		{
-			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 100, 32, FColor::Red);
+			if (MouseX <= 50)
+			{
+				MoveRight(-1);
+			}
+
+			if (MouseX >= ViewportSizeX - 50)
+			{
+				MoveRight(1);
+			}
+
+			if (MouseY <= 50)
+			{
+				MoveForward(1);
+			}
+
+			if (MouseY >= ViewportSizeY - 50)
+			{
+				MoveForward(-1);
+			}
 		}
 	}
 }
 
-// Called every frame
+void ADPlayerPawn::Zoom(float Value)
+{
+	ZoomDirection = FMath::Clamp(Value, -1.0f, 1.0f);
+}
+
+void ADPlayerPawn::CameraSmoothZoom(float DeltaTime)
+{
+	if (ZoomDirection != 0)
+	{
+		float NewZoom = SpringArmComp->TargetArmLength + (ZoomDirection * DeltaTime * ZoomSpeed);
+
+		NewZoom = FMath::Clamp(NewZoom, MinZoomDistance, MaxZoomDistance);
+		
+		SpringArmComp->TargetArmLength = FMath::FInterpTo(SpringArmComp->TargetArmLength, NewZoom, GetWorld()->DeltaTimeSeconds, ZoomSpeed);
+	}
+}
+
 void ADPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawCameraPositionDebug();
+	MouseMovement();
+
+	CameraSmoothZoom(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ADPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
+	PlayerInputComponent->BindAxis("MoveRight", this, &ADPlayerPawn::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ADPlayerPawn::MoveForward);
 
+	PlayerInputComponent->BindAxis("Rotate", this, &ADPlayerPawn::AddControllerYawInput);
+
+	PlayerInputComponent->BindAxis("Zoom", this, &ADPlayerPawn::Zoom);
+}

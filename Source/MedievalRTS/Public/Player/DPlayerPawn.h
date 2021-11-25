@@ -3,49 +3,56 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "Components/DCameraMovementComponent.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/DefaultPawn.h"
 #include "DPlayerPawn.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
-
+/**
+ * 
+ */
 UCLASS()
-class MEDIEVALRTS_API ADPlayerPawn : public APawn
+class MEDIEVALRTS_API ADPlayerPawn : public ADefaultPawn
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this pawn's properties
+	public:
+
 	ADPlayerPawn();
 
-protected:
+	protected:
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* MeshComp;
-	
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(VisibleAnywhere)
-	UDCameraMovementComponent* CameraMovementComp;
+	UPROPERTY(EditAnywhere, Category = "Camera|Zoom")
+	float ZoomSpeed;
 
-	UPROPERTY(EditAnywhere)
-	bool bDebugCamera = false;
-	
+	UPROPERTY(EditAnywhere, Category = "Camera|Zoom")
+	float MinZoomDistance;
+
+	UPROPERTY(EditAnywhere, Category = "Camera|Zoom")
+	float MaxZoomDistance;
+
+	UPROPERTY()
+	float ZoomDirection;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void DrawCameraPositionDebug() const;
-public:	
+	void MouseMovement();
+
+	void Zoom(float Value);
+
+	void CameraSmoothZoom(float DeltaTime);
+
+	public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

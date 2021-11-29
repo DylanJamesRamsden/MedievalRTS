@@ -6,6 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/DHUD.h"
+#include "Player/DUnitManagementComponent.h"
 
 ADPlayerPawn::ADPlayerPawn()
 {
@@ -19,6 +21,8 @@ ADPlayerPawn::ADPlayerPawn()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	UnitManagementComp = CreateDefaultSubobject<UDUnitManagementComponent>("UnitManagementComp");
 }
 
 void ADPlayerPawn::BeginPlay()
@@ -101,4 +105,20 @@ void ADPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("Rotate", this, &ADPlayerPawn::AddControllerYawInput);
 
 	PlayerInputComponent->BindAxis("Zoom", this, &ADPlayerPawn::Zoom);
+
+	APlayerController* PController = Cast<APlayerController>(GetController());
+	if (PController)
+	{
+		ADHUD* PHUD = Cast<ADHUD>(PController->GetHUD());
+		if (PHUD)
+		{
+			PlayerInputComponent->BindAction("LeftMouse", IE_Pressed, PHUD,&ADHUD::StartSelection);
+			PlayerInputComponent->BindAction("LeftMouse", IE_Released, PHUD, &ADHUD::EndSelection);	
+		}
+	}
+}
+
+UDUnitManagementComponent* ADPlayerPawn::GetUnitManagmentComponent()
+{
+	return UnitManagementComp;
 }

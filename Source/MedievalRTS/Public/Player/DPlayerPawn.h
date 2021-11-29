@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/DefaultPawn.h"
 #include "DPlayerPawn.generated.h"
 
+class UDUnitManagementComponent;
 class USpringArmComponent;
 class UCameraComponent;
 /**
@@ -40,6 +42,9 @@ class MEDIEVALRTS_API ADPlayerPawn : public ADefaultPawn
 	UPROPERTY()
 	float ZoomDirection;
 
+	UPROPERTY(VisibleAnywhere)
+	UDUnitManagementComponent* UnitManagementComp;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -55,4 +60,6 @@ class MEDIEVALRTS_API ADPlayerPawn : public ADefaultPawn
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UDUnitManagementComponent* GetUnitManagmentComponent();
 };

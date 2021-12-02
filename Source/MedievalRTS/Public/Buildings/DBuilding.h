@@ -3,23 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "Enums/DTeam.h"
+#include "GameFramework/Actor.h"
 #include "Interfaces/DSelectable.h"
-#include "GameFramework/Character.h"
-#include "DUnit.generated.h"
+
+#include "DBuilding.generated.h"
 
 UCLASS()
-class MEDIEVALRTS_API ADUnit : public ACharacter, public IDSelectable
+class MEDIEVALRTS_API ADBuilding : public AActor, public IDSelectable
 {
 	GENERATED_BODY()
-
-public:
-	// Sets default values for this character's properties
-	ADUnit();
+	
+public:	
+	// Sets default values for this actor's properties
+	ADBuilding();
 
 protected:
 
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* StaticMeshComp;
+	
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectionDecal;
 	
@@ -31,15 +33,8 @@ protected:
 
 	void Deselected_Implementation() override;
 
-	UPROPERTY()
-	TEnumAsByte<EDTeam> Team;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 
 };

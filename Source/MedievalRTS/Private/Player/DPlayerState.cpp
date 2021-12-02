@@ -3,3 +3,12 @@
 
 #include "Player/DPlayerState.h"
 
+void ADPlayerState::SetTeam(TEnumAsByte<EDTeam> NewTeam)
+{
+	Team = NewTeam;
+}
+
+TEnumAsByte<EDTeam> ADPlayerState::GetTeam() const
+{
+	return Team;
+}

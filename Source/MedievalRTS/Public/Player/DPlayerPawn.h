@@ -7,6 +7,7 @@
 #include "GameFramework/DefaultPawn.h"
 #include "DPlayerPawn.generated.h"
 
+class UDBuildingManagementComponent;
 class UDUnitManagementComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -45,6 +46,9 @@ class MEDIEVALRTS_API ADPlayerPawn : public ADefaultPawn
 	UPROPERTY(VisibleAnywhere)
 	UDUnitManagementComponent* UnitManagementComp;
 
+	UPROPERTY(VisibleAnywhere)
+	UDBuildingManagementComponent* BuildingManagementComp;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -61,5 +65,7 @@ class MEDIEVALRTS_API ADPlayerPawn : public ADefaultPawn
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UDUnitManagementComponent* GetUnitManagmentComponent();
+	UDUnitManagementComponent* GetUnitManagementComponent();
+
+	UDBuildingManagementComponent* GetBuildingManagementComponent();
 };

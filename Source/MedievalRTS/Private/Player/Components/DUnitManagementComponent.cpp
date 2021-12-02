@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/DUnitManagementComponent.h"
+#include "Player/Components/DUnitManagementComponent.h"
 
 // Sets default values for this component's properties
 UDUnitManagementComponent::UDUnitManagementComponent()
@@ -52,6 +52,16 @@ void UDUnitManagementComponent::AddSelectedUnit(ADUnit* SelectedUnit)
 	SelectedUnits.Add(SelectedUnit);
 }
 
+void UDUnitManagementComponent::RemoveSelectedUnit(ADUnit* UnitToRemove)
+{
+	if (UnitToRemove->Implements<UDSelectable>())
+	{
+		IDSelectable::Execute_Deselected(UnitToRemove);
+	}
+
+	SelectedUnits.Remove(UnitToRemove);
+}
+
 void UDUnitManagementComponent::ClearSelectedUnits()
 {
 	for (auto Unit : SelectedUnits)
@@ -65,8 +75,13 @@ void UDUnitManagementComponent::ClearSelectedUnits()
 	SelectedUnits.Empty();
 }
 
-/*void UDUnitManagementComponent::RemoveSelectedUnit(ADUnit* UnitToRemove)
+TArray<ADUnit*> UDUnitManagementComponent::GetSelectedUnits() const 
 {
-	SelectedUnits.Remove(UnitToRemove);
-}*/
+	return SelectedUnits;
+}
+
+int UDUnitManagementComponent::GetNumberOfSelectedUnits() const
+{
+	return SelectedUnits.Num();
+}
 

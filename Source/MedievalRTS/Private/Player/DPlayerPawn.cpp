@@ -7,7 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/DHUD.h"
-#include "Player/DUnitManagementComponent.h"
+#include "Player/Components/DBuildingManagementComponent.h"
+#include "Player/Components/DUnitManagementComponent.h"
 
 ADPlayerPawn::ADPlayerPawn()
 {
@@ -23,6 +24,7 @@ ADPlayerPawn::ADPlayerPawn()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	UnitManagementComp = CreateDefaultSubobject<UDUnitManagementComponent>("UnitManagementComp");
+	BuildingManagementComp = CreateDefaultSubobject<UDBuildingManagementComponent>("BuildingManagementComp");
 }
 
 void ADPlayerPawn::BeginPlay()
@@ -118,7 +120,12 @@ void ADPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
-UDUnitManagementComponent* ADPlayerPawn::GetUnitManagmentComponent()
+UDBuildingManagementComponent* ADPlayerPawn::GetBuildingManagementComponent()
+{
+	return BuildingManagementComp;
+}
+
+UDUnitManagementComponent* ADPlayerPawn::GetUnitManagementComponent()
 {
 	return UnitManagementComp;
 }

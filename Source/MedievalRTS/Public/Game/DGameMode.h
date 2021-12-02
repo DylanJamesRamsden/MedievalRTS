@@ -13,5 +13,6 @@ UCLASS()
 class MEDIEVALRTS_API ADGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 };

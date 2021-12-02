@@ -38,8 +38,13 @@ public:
 	void RemoveUnit(ADUnit* UnitToRemove);
 
 	//Used when selecting
+	TArray<ADUnit*> GetSelectedUnits() const;
+	
+	int GetNumberOfSelectedUnits() const;
+	
 	void AddSelectedUnit(ADUnit* SelectedUnit);
 
+	void RemoveSelectedUnit(ADUnit* UnitToRemove);
+
 	void ClearSelectedUnits();
-	//void RemoveSelectedUnit(ADUnit* UnitToRemove);
 };

@@ -34,8 +34,13 @@ protected:
 
 	virtual void DrawHUD() override;
 
-	UFUNCTION()
-	void SelectUnits();
+	void SelectSelectables();
+
+	//Deselects all of the buildings that do not fall in the selection box anymore
+	void ClearDeselectedBuildings(TArray<AActor*> ActorsFound) const;
+
+	//Deselects all of the buildings that do not fall in the selection box anymore
+	void ClearDeselectedUnits(TArray<AActor*> ActorsFound) const;
 
 public:
 	

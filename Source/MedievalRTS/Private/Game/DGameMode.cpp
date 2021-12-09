@@ -3,24 +3,23 @@
 
 #include "Game/DGameMode.h"
 
-#include "Enums/DTeam.h"
+#include "Game/DGameState.h"
+#include "GameFramework/GameStateBase.h"
 #include "Player/DPlayerController.h"
-#include "Player/DPlayerState.h"
 
 void ADGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
-
-	ADPlayerController* PlayerController = Cast<ADPlayerController>(NewPlayer);
-	if (PlayerController)
+	
+	if (GetNumPlayers() == 2)
 	{
-		ADPlayerState* PlayerState = PlayerController->GetPlayerState<ADPlayerState>();
-		if (PlayerState)
+		ADGameState* GS = Cast<ADGameState>(GameState);
+
+		if (GS)
 		{
-			PlayerState->SetTeam(Team1);
-			//Handle team setting here
-			
-			
+			GS->UpdateLevelState(Initializing);	
 		}
+		else UE_LOG(LogTemp, Error, TEXT("Incorrect GameState set. Please ChangeGame state to subclass of DGameState in BP_GameMode."));
+		
 	}
 }

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 
-#include "Enums/DTeam.h"
-#include "Interfaces/DSelectable.h"
+#include "Core/Enums/DTeam.h"
+#include "Core/Interfaces/DSelectable.h"
 #include "GameFramework/Character.h"
 #include "DUnit.generated.h"
 
@@ -22,17 +22,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectionDecal;
+
+	UPROPERTY()
+	TEnumAsByte<EDTeam> Team = Team2;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//virtual void Selected() override;
 	void Selected_Implementation() override;
 
 	void Deselected_Implementation() override;
-
-	UPROPERTY()
-	TEnumAsByte<EDTeam> Team;
 
 public:	
 	// Called every frame
@@ -41,5 +40,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	EDTeam GetTeam();
 };

@@ -13,5 +13,16 @@ UCLASS()
 class MEDIEVALRTS_API ADPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+	protected:
+
+	virtual void BeginPlay() override;
+
+	public:
+	
+	void InitializeSelf();
+
+	UFUNCTION(Client, Reliable)
+	void C_InitializeHUD();
 	
 };

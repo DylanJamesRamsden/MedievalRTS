@@ -49,3 +49,8 @@ void ADBuilding::Tick(float DeltaTime)
 
 }
 
+EDTeam ADBuilding::GetTeam()
+{
+	return Team;
+}
+

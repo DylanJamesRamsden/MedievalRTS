@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DTeam.generated.h"
+#include "DResource.generated.h"
 
 UENUM(Blueprintable)
-enum EDTeam
+enum EDResource
 {
-	Team1,
-	Team2
+	Wood,
+	Gold,
+	Food,
+	Stone,
 };

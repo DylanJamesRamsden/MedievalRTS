@@ -18,6 +18,24 @@ class MEDIEVALRTS_API ADHUD : public AHUD
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> PlayerResourcesWidget;
+
+	UPROPERTY()
+	UUserWidget* PlayerResourcesWidgetInstance;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> UnitInformationWidget;
+
+	UPROPERTY()
+	UUserWidget* UnitInformationWidgetInstance;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> GameTimeWidget;
+
+	UPROPERTY()
+	UUserWidget* GameTimerWidgetInstance;
+	
 	UPROPERTY()
 	ADPlayerPawn* OwningPawn;
 	
@@ -42,11 +60,10 @@ protected:
 	//Deselects all of the buildings that do not fall in the selection box anymore
 	void ClearDeselectedUnits(TArray<AActor*> ActorsFound) const;
 
-public:
-	
-	UFUNCTION()
+public:	
 	void StartSelection();
 
-	UFUNCTION()
 	void EndSelection();
+
+	void InitializePlayerWidgets();
 };

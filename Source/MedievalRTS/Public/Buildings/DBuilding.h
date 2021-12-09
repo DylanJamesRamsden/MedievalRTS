@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Core/Enums/DTeam.h"
 #include "GameFramework/Actor.h"
-#include "Interfaces/DSelectable.h"
+#include "Core/Interfaces/DSelectable.h"
 
 #include "DBuilding.generated.h"
 
@@ -24,11 +26,13 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectionDecal;
+
+	UPROPERTY()
+	TEnumAsByte<EDTeam> Team = Team2;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//virtual void Selected() override;
 	void Selected_Implementation() override;
 
 	void Deselected_Implementation() override;
@@ -36,5 +40,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	EDTeam GetTeam();
 
 };

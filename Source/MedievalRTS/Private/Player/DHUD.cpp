@@ -3,8 +3,10 @@
 
 #include "Player/DHUD.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Buildings/DBuilding.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/DPlayerState.h"
 #include "Player/Components/DBuildingManagementComponent.h"
 #include "Player/COmponents/DUnitManagementComponent.h"
 
@@ -28,6 +30,27 @@ void ADHUD::StartSelection()
 void ADHUD::EndSelection()
 {
 	bIsDragging = false;
+}
+
+void ADHUD::InitializePlayerWidgets()
+{
+	if (PlayerResourcesWidget)
+	{
+		PlayerResourcesWidgetInstance = CreateWidget(GetOwningPlayerController(), PlayerResourcesWidget);
+		PlayerResourcesWidgetInstance->AddToViewport();
+	}
+
+	if (UnitInformationWidget)
+	{
+		UnitInformationWidgetInstance = CreateWidget(GetOwningPlayerController(), UnitInformationWidget);
+		UnitInformationWidgetInstance->AddToViewport();
+	}
+
+	if (GameTimeWidget)
+	{
+		GameTimerWidgetInstance = CreateWidget(GetOwningPlayerController(), GameTimeWidget);
+		GameTimerWidgetInstance->AddToViewport();
+	}
 }
 
 void ADHUD::DrawHUD()
@@ -55,6 +78,8 @@ void ADHUD::SelectSelectables()
 
 	ClearDeselectedBuildings(ActorsFound);
 	ClearDeselectedUnits(ActorsFound);
+
+	ADPlayerState* DPS = GetOwningPlayerController()->GetPlayerState<ADPlayerState>();
 	
 	for (auto OutActor : ActorsFound)
 	{
@@ -65,7 +90,10 @@ void ADHUD::SelectSelectables()
 				if (OwningPawn->GetBuildingManagementComponent()->GetNumberOfSelectedBuildings() == 0)
 				{
 					ADUnit* Unit = Cast<ADUnit>(OutActor);
-					OwningPawn->GetUnitManagementComponent()->AddSelectedUnit(Unit);	
+					if (Unit->GetTeam() == DPS->GetTeam())
+					{
+						OwningPawn->GetUnitManagementComponent()->AddSelectedUnit(Unit);		
+					}
 				}
 			}
 			else if (OutActor->IsA(ADBuilding::StaticClass()))
@@ -73,7 +101,10 @@ void ADHUD::SelectSelectables()
 				if (OwningPawn->GetUnitManagementComponent()->GetNumberOfSelectedUnits() == 0)
 				{
 					ADBuilding* Building = Cast<ADBuilding>(OutActor);
-					OwningPawn->GetBuildingManagementComponent()->AddSelectedBuilding(Building);	
+					if (Building->GetTeam() == DPS->GetTeam())
+					{
+						OwningPawn->GetBuildingManagementComponent()->AddSelectedBuilding(Building);	
+					}	
 				}
 			}
 		}

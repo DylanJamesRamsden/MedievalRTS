@@ -53,3 +53,8 @@ void ADUnit::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+EDTeam ADUnit::GetTeam()
+{
+	return Team;
+}
+

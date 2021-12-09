@@ -3,15 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
+
+#include "Core/Enums/DLevelState.h"
+#include "Core/Enums/DTeam.h"
+#include "GameFramework/GameState.h"
 #include "DGameState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MEDIEVALRTS_API ADGameState : public AGameStateBase
+class MEDIEVALRTS_API ADGameState : public AGameState
 {
 	GENERATED_BODY()
 	
+	protected:
+
+	UPROPERTY()
+	TEnumAsByte<EDLevelState> LevelState;
+
+	public:
+
+	EDTeam GetAvailableTeam();
+
+	void UpdateLevelState(EDLevelState NewState);
+
+	void InitializePlayers();
 };
